@@ -35,12 +35,18 @@ int main() {
 	input_length = strlen((char *)input);
 	unsigned char ciphertext[MAX_ENC_LENGTH(input_length)];
 	int ciphertext_length = aes256_encrypt(input, input_length, ciphertext, key, iv);
+	if (ciphertext_length == -1) {
+		return 1;
+	}
 	printf("ciphertext is: ");
 	hex_print(ciphertext, ciphertext_length);
 
 	// use aes256_decrypt2 to decrypt the message
 	unsigned char decrypted[ciphertext_length + 1];
 	int decrypted_length = aes256_decrypt(ciphertext, ciphertext_length, decrypted, key, iv);
+	if (decrypted_length == -1) {
+		return 1;
+	}
 	decrypted[decrypted_length] = '\0';
 	printf("decrypted message is: \"%s\"\n", decrypted);
 	
