@@ -1,0 +1,5 @@
+enclogs
+.vscode
+obj/*
+*.swp
+*.temp.*
