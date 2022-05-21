@@ -13,8 +13,8 @@
 
 #define MAX_ENC_LENGTH(len) (len + (AES_BLOCK_SIZE - len % AES_BLOCK_SIZE))
 
-ssize_t aes256_encrypt(unsigned char *input, int length, unsigned char *output, unsigned char *key, unsigned char *iv);
+ssize_t aes256_encrypt(void *input, int length, void *output, unsigned char *key, unsigned char *iv);
 
-ssize_t aes256_decrypt(unsigned char *input, int length, unsigned char *output, unsigned char *key, unsigned char *iv);
+ssize_t aes256_decrypt(void *input, int length, void *output, unsigned char *key, unsigned char *iv);
 
 #endif

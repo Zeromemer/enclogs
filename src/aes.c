@@ -2,7 +2,7 @@
 
 // Sourced from https://github.com/DaniloVlad/OpenSSL-AES
 
-ssize_t aes256_encrypt(unsigned char *input, int in_length, unsigned char *output, unsigned char *key, unsigned char *iv) {
+ssize_t aes256_encrypt(void *input, int in_length, void *output, unsigned char *key, unsigned char *iv) {
 	EVP_CIPHER_CTX *ctx;
 	int result_len;
 	int len = MAX_ENC_LENGTH(in_length);
@@ -31,7 +31,7 @@ ssize_t aes256_encrypt(unsigned char *input, int in_length, unsigned char *outpu
 	return result_len;
 }
 
-ssize_t aes256_decrypt(unsigned char *input, int in_length, unsigned char *output, unsigned char *key, unsigned char *iv) {
+ssize_t aes256_decrypt(void *input, int in_length, void *output, unsigned char *key, unsigned char *iv) {
 	EVP_CIPHER_CTX *ctx;
 	int result_len;
 	int len = 0;
