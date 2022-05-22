@@ -26,7 +26,7 @@ int main() {
 	unsigned char iv[AES_BLOCK_SIZE];
 	EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha256(), NULL, hash, SHA256_DIGEST_LENGTH, 1, key, iv);
 
-	// use aes256_encrypt2 to encrypt a message inputed by user
+	// use aes256_encrypt to encrypt a message inputed by user
 	char input[1024];
 	int input_length;
 	printf("Enter message to encrypt: ");
@@ -35,18 +35,14 @@ int main() {
 	input_length = strlen(input);
 	unsigned char ciphertext[MAX_ENC_LENGTH(input_length)];
 	int ciphertext_length = aes256_encrypt(input, input_length, ciphertext, key, iv);
-	if (ciphertext_length == -1) {
-		return 1;
-	}
+	if (ciphertext_length == -1) return 1;
 	printf("ciphertext is: ");
 	hex_print(ciphertext, ciphertext_length);
 
-	// use aes256_decrypt2 to decrypt the message
+	// use aes256_decrypt to decrypt the message
 	char decrypted[ciphertext_length + 1];
 	int decrypted_length = aes256_decrypt(ciphertext, ciphertext_length, decrypted, key, iv);
-	if (decrypted_length == -1) {
-		return 1;
-	}
+	if (decrypted_length == -1) return 1;
 	decrypted[decrypted_length] = '\0';
 	printf("decrypted message is: \"%s\"\n", decrypted);
 	
