@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <openssl/sha.h>
 #include "include/aes.h"
+#include "include/input.h"
 
 void hex_print(unsigned char *in, size_t len) {
 	for(int i = 0; i < len; i++) {
@@ -12,7 +13,7 @@ void hex_print(unsigned char *in, size_t len) {
 }
 
 int main() {
-	const char *passwd = "password";
+	char *passwd = rl_getps("Enter password: ");
 
 	// take password's SHA256 hash
 	unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -27,12 +28,9 @@ int main() {
 	EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha256(), NULL, hash, SHA256_DIGEST_LENGTH, 1, key, iv);
 
 	// use aes256_encrypt to encrypt a message inputed by user
-	char input[1024];
-	int input_length;
-	printf("Enter message to encrypt: ");
-	scanf("%s", input);
+	char *input = rl_gets("Enter message: ");
+	int input_length = strlen(input);
 	printf("your message is: \"%s\"\n", input);
-	input_length = strlen(input);
 	unsigned char ciphertext[MAX_ENC_LENGTH(input_length)];
 	int ciphertext_length = aes256_encrypt(input, input_length, ciphertext, key, iv);
 	if (ciphertext_length == -1) return 1;
