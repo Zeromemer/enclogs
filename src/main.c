@@ -15,34 +15,25 @@ void hex_print(unsigned char *in, size_t len) {
 int main() {
 	char *passwd = rl_getps("Enter password: ");
 
-	// take password's SHA256 hash
-	unsigned char hash[SHA256_DIGEST_LENGTH];
-	SHA256_CTX sha256;
-	SHA256_Init(&sha256);
-	SHA256_Update(&sha256, passwd, strlen(passwd));
-	SHA256_Final(hash, &sha256);
-
-	// use hash to generate key and iv
-	unsigned char key[AES_BLOCK_SIZE];
-	unsigned char iv[AES_BLOCK_SIZE];
-	EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha256(), NULL, hash, SHA256_DIGEST_LENGTH, 1, key, iv);
+	aes_key_t *key_st = aes_key_init(passwd);
 
 	// use aes256_encrypt to encrypt a message inputed by user
 	char *input = rl_gets("Enter message: ");
 	int input_length = strlen(input);
 	printf("your message is: \"%s\"\n", input);
 	unsigned char ciphertext[MAX_ENC_LENGTH(input_length)];
-	int ciphertext_length = aes256_encrypt(input, input_length, ciphertext, key, iv);
+	int ciphertext_length = aes256_encrypt(key_st, input, input_length, ciphertext);
 	if (ciphertext_length == -1) return 1;
 	printf("ciphertext is: ");
 	hex_print(ciphertext, ciphertext_length);
 
 	// use aes256_decrypt to decrypt the message
 	char decrypted[ciphertext_length + 1];
-	int decrypted_length = aes256_decrypt(ciphertext, ciphertext_length, decrypted, key, iv);
+	int decrypted_length = aes256_decrypt(key_st, ciphertext, ciphertext_length, decrypted);
 	if (decrypted_length == -1) return 1;
 	decrypted[decrypted_length] = '\0';
 	printf("decrypted message is: \"%s\"\n", decrypted);
 	
+	free(key_st);
 	return 0;
 }
