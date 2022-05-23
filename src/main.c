@@ -13,12 +13,12 @@ void hex_print(unsigned char *in, size_t len) {
 }
 
 int main() {
-	char *passwd = rl_getps("Enter password: ");
-
-	aes_key_t *key_st = aes_key_init(passwd);
+	char *input;
+	input = rl_getps("Enter password: ");
+	aes_key_t *key_st = aes_key_init(input);
 
 	// use aes256_encrypt to encrypt a message inputed by user
-	char *input = rl_gets("Enter message: ");
+	input = rl_gets("Enter message: ");
 	int input_length = strlen(input);
 	printf("your message is: \"%s\"\n", input);
 	unsigned char ciphertext[MAX_ENC_LENGTH(input_length)];

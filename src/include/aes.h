@@ -15,6 +15,7 @@
 // aes_key_t is a structure that contains the key and iv
 typedef struct aes_key *aes_key_t;
 
+// macro for getting the maximum length of a ciphertext given a message length
 #define MAX_ENC_LENGTH(len) (len + (AES_BLOCK_SIZE - len % AES_BLOCK_SIZE))
 
 aes_key_t aes_key_init(char *passwd);

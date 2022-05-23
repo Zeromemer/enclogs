@@ -1,4 +1,4 @@
-# Enc Logs
+# Enc Logs (UNFINISHED)
 This is a program for encrypting logs with a password made in C.
 Works like a diary.
 ## Encryption Algorithm
