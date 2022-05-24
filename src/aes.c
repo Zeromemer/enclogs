@@ -1,4 +1,5 @@
 #include "include/aes.h"
+#include "include/xmalloc.h"
 
 struct aes_key {
 	unsigned char key[AES_BLOCK_SIZE];
@@ -6,7 +7,7 @@ struct aes_key {
 };
 
 aes_key_t aes_key_init(char *passwd) {
-	aes_key_t key = malloc(sizeof(aes_key_t));
+	aes_key_t key = xmalloc(sizeof(aes_key_t));
 	unsigned char hash[SHA256_DIGEST_LENGTH];
 	SHA256_CTX sha256;
 	SHA256_Init(&sha256);
@@ -17,7 +18,7 @@ aes_key_t aes_key_init(char *passwd) {
 }
 
 void aes_key_free(aes_key_t key) {
-	free(key);
+	xfree(key);
 }
 
 // aes256_encrypt/decrypt have been sourced from https://github.com/DaniloVlad/OpenSSL-AES

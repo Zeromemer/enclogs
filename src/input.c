@@ -1,4 +1,5 @@
 #include "include/input.h"
+#include "include/xmalloc.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
@@ -17,7 +18,7 @@ char *rl_gets(const char *prompt)
 	 return the memory to the free pool. */
 	if (line_read)
 	{
-		free (line_read);
+		xfree (line_read);
 		line_read = (char *)NULL;
 	}
 
