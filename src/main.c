@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <openssl/err.h>
 #include "include/aes.h"
 #include "include/input.h"
 #include "include/log.h"
@@ -20,7 +21,7 @@ int main() {
 
 	input = rl_getps("Enter password: ");
 	aes_key_t key_st = aes_key_init(input);
-	free(input);
+	xfree(input);
 
 	input = rl_gets("Enter message: ");
 	printf("your message is: \"%s\"\n", input);
@@ -40,7 +41,7 @@ int main() {
 	char encrypted_log[MAX_ENC_LENGTH(serialized_log_len)];
 	ssize_t encrypted_log_len = aes256_encrypt(key_st, serialized_log, serialized_log_len, encrypted_log);
 	if (encrypted_log_len < 0) {
-		printf("Error encrypting log\n");
+		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
@@ -52,7 +53,7 @@ int main() {
 	char decrypted_log[encrypted_log_len];
 	ssize_t decrypted_log_len = aes256_decrypt(key_st, encrypted_log, encrypted_log_len, decrypted_log);
 	if (decrypted_log_len < 0) {
-		printf("Error decrypting log\n");
+		ERR_print_errors_fp(stderr);
 		return 1;
 	}
 
