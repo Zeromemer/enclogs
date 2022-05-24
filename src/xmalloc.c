@@ -1,7 +1,7 @@
 #include "include/xmalloc.h"
 #include <stdio.h>
 
-#define ENCLOGS_XMALLOC_DEBUG
+// #define ENCLOGS_XMALLOC_DEBUG
 
 void *xmalloc_internal(size_t size, const char *file, int line) {
     void *ptr = malloc(size);

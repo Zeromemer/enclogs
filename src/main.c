@@ -65,4 +65,10 @@ int main() {
 
 	// print the deserialized log
 	printf("deserialized log: \"%s\"\n", deserialized_log->message);
+
+	// free all the memory (uneccessary, but will be useful when this becomes an actual CLI)
+	log_free(log);
+	aes_key_free(key_st);
+	free(serialized_log);
+	log_free(deserialized_log);
 }

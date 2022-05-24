@@ -36,7 +36,7 @@ void serialize_log(log_t *src, char **dest, size_t *dest_len) {
 }
 
 void deserialize_log(void *src, log_t **dest) {
-    // the src should look like a log_t
+    // the dest should look like a log_t
     size_t message_len = *(size_t *)src;
     char *message = xmalloc(message_len + 1);
     memcpy(message, src + sizeof(size_t), message_len);
