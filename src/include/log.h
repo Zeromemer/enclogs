@@ -5,8 +5,8 @@
 #include <unistd.h>
 
 typedef struct log {
-    size_t message_len;
-    char *message;
+    size_t content_len;
+    char *content;
     struct timespec time;
 } log_t;
 

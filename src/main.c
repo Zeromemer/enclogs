@@ -30,7 +30,7 @@ int main() {
 	log_t *log = log_init(input);
 
 	// print the log
-	printf("log: message_len: %zu, message: \"%s\", time: %ld.%ld\n", log->message_len, log->message, log->time.tv_sec, log->time.tv_nsec);
+	printf("log: message_len: %zu, message: \"%s\", time: %ld.%ld\n", log->content_len, log->content, log->time.tv_sec, log->time.tv_nsec);
 
 	// serialize the log
 	char *serialized_log;
@@ -66,7 +66,7 @@ int main() {
 	deserialize_log(decrypted_log, &deserialized_log);
 
 	// print the deserialized log
-	printf("deserialized log: \"%s\"\n", deserialized_log->message);
+	printf("deserialized log: \"%s\"\n", deserialized_log->content);
 
 	// free all the memory (uneccessary, but will be useful when this becomes an actual CLI)
 	log_free(log);
