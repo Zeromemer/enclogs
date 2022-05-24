@@ -1,7 +1,7 @@
 #include "include/xmalloc.h"
 #include <stdio.h>
 
-// #define ENCLOGS_XMALLOC_DEBUG
+#define ENCLOGS_XMALLOC_DEBUG
 
 void *xmalloc_internal(size_t size, const char *file, int line) {
     void *ptr = malloc(size);
@@ -46,7 +46,7 @@ void *xreallocarray_internal(void *ptr, size_t nmemb, size_t size, const char *f
         exit(1);
     }
     #ifdef ENCLOGS_XMALLOC_DEBUG
-    printf("%s:%d: xreallocarray(%p, %zu, %zu) = %p\n", file, line, ptr, new_nmemb, size, new_ptr);
+    printf("%s:%d: xreallocarray(%p, %zu, %zu) = %p\n", file, line, ptr, nmemb, size, new_ptr);
     #endif
     return new_ptr;
 }

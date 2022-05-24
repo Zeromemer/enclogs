@@ -7,7 +7,7 @@ struct aes_key {
 };
 
 aes_key_t aes_key_init(char *passwd) {
-	aes_key_t key = xmalloc(sizeof(aes_key_t));
+	aes_key_t key = xmalloc(sizeof(struct aes_key));
 	unsigned char hash[SHA256_DIGEST_LENGTH];
 	SHA256_CTX sha256;
 	SHA256_Init(&sha256);
