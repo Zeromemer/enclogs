@@ -20,6 +20,7 @@ int main() {
 
 	input = rl_getps("Enter password: ");
 	aes_key_t key_st = aes_key_init(input);
+	free(input);
 
 	input = rl_gets("Enter message: ");
 	printf("your message is: \"%s\"\n", input);

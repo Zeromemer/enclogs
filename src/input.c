@@ -41,7 +41,7 @@ char *rl_getps(const char *prompt) {
 	new.c_lflag &= ~ECHO;
 	tcsetattr(STDIN_FILENO, TCSANOW, &new);
 
-	char *passwd = rl_gets(prompt);
+	char *passwd = readline(prompt);
 	printf("\n");
 
 	tcsetattr(STDIN_FILENO, TCSANOW, &old);
