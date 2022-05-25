@@ -16,8 +16,30 @@ void hex_print(void *in, size_t len) {
 	printf("\n");
 }
 
+int timespec2str(char *buf, uint len, struct timespec *ts) {
+    int ret;
+    struct tm t;
+
+    tzset();
+    if (localtime_r(&(ts->tv_sec), &t) == NULL)
+        return 1;
+
+    ret = strftime(buf, len, "%F %T", &t);
+    if (ret == 0)
+        return 2;
+    len -= ret - 1;
+
+    ret = snprintf(&buf[strlen(buf)], len, ".%09ld", ts->tv_nsec);
+    if (ret >= len)
+        return 3;
+
+    return 0;
+}
+
+
 int main() {
 	char *input;
+	char times_buf[sizeof("1970-01-01 00:00:00.000000000")];
 
 	input = rl_getps("Enter password: ");
 	aes_key_t key_st = aes_key_init(input);
@@ -30,7 +52,8 @@ int main() {
 	log_t *log = log_init(input);
 
 	// print the log
-	printf("log: message_len: %zu, message: \"%s\", time: %ld.%ld\n", log->content_len, log->content, log->time.tv_sec, log->time.tv_nsec);
+	timespec2str(times_buf, sizeof(times_buf), &log->time);
+	printf("log: \"%s\" at %s\n", log->content, times_buf);
 
 	// serialize the log
 	char *serialized_log;
@@ -66,7 +89,7 @@ int main() {
 	deserialize_log(decrypted_log, &deserialized_log);
 
 	// print the deserialized log
-	printf("deserialized log: \"%s\"\n", deserialized_log->content);
+	printf("deserialized log: \"%s\" at %s\n", deserialized_log->content, times_buf);
 
 	// free all the memory (uneccessary, but will be useful when this becomes an actual CLI)
 	log_free(log);
