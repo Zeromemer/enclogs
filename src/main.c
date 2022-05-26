@@ -45,13 +45,11 @@ int timespec2str(char *buf, uint len, struct timespec *ts) {
 int main() {
 	char *input;
 	char time_buf[sizeof("1970-01-01 00:00:00.000000000")];
-
-	input = rl_getps("Enter password: ");
-	aes_key_t key_st = aes_key_init(input);
-	xfree(input);
+	aes_key_t key_st;
 
 	// create an empty enclogs file if it doesn't exist
-	if (access(ENCLOGS_PATH, F_OK) != 0) {
+	int enclogs_file_exists = access(ENCLOGS_PATH, F_OK) == 0;
+	if (!enclogs_file_exists) {
 		FILE *f = fopen(ENCLOGS_PATH, "w+");
 		// write the sign
 		fwrite(sign, SIGN_LENGTH, sizeof(unsigned char), f);
@@ -77,6 +75,22 @@ int main() {
 	size_t logs_amount;
 	fread(&logs_amount, sizeof(logs_amount), 1, f);
 	printf("logs_amount = %zu\n", logs_amount);
+
+	if (enclogs_file_exists) {
+		input = rl_getps("Enter password: ");
+		key_st = aes_key_init(input);
+		xfree(input);
+	} else {
+		input = rl_getps("Enter password: ");
+		char *confirm = rl_getps("Confirm password: ");
+		if (strcmp(input, confirm) != 0) {
+			fprintf(stderr, "Error: passwords don't match\n");
+			return 1;
+		}
+		key_st = aes_key_init(input);
+		xfree(input);
+		xfree(confirm);
+	}
 
 	log_t **logs = xcalloc(logs_amount + 1, sizeof(log_t *));
 
