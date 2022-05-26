@@ -49,6 +49,23 @@ int main() {
 
 	// create an empty enclogs file if it doesn't exist
 	int enclogs_file_exists = access(ENCLOGS_PATH, F_OK) == 0;
+	
+	if (enclogs_file_exists) {
+		input = rl_getps("Enter password: ");
+		key_st = aes_key_init(input);
+		xfree(input);
+	} else {
+		input = rl_getps("Enter password: ");
+		char *confirm = rl_getps("Confirm password: ");
+		if (strcmp(input, confirm) != 0) {
+			fprintf(stderr, "Error: passwords don't match\n");
+			return 1;
+		}
+		key_st = aes_key_init(input);
+		xfree(input);
+		xfree(confirm);
+	}
+	
 	if (!enclogs_file_exists) {
 		FILE *f = fopen(ENCLOGS_PATH, "w+");
 		// write the sign
@@ -75,22 +92,6 @@ int main() {
 	size_t logs_amount;
 	fread(&logs_amount, sizeof(logs_amount), 1, f);
 	printf("logs_amount = %zu\n", logs_amount);
-
-	if (enclogs_file_exists) {
-		input = rl_getps("Enter password: ");
-		key_st = aes_key_init(input);
-		xfree(input);
-	} else {
-		input = rl_getps("Enter password: ");
-		char *confirm = rl_getps("Confirm password: ");
-		if (strcmp(input, confirm) != 0) {
-			fprintf(stderr, "Error: passwords don't match\n");
-			return 1;
-		}
-		key_st = aes_key_init(input);
-		xfree(input);
-		xfree(confirm);
-	}
 
 	log_t **logs = xcalloc(logs_amount + 1, sizeof(log_t *));
 
