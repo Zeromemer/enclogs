@@ -6,8 +6,8 @@
 void *xmalloc_internal(size_t size, const char *file, int line) {
     void *ptr = malloc(size);
     if (ptr == NULL) {
-        fprintf(stderr, "xmalloc: Out of memory at %s:%d\n", file, line);
-        exit(1);
+        fprintf(stderr, "%s:%d: xmalloc(%zu) returned NULL\n", file, line, size);
+        abort();
     }
     #ifdef ENCLOGS_XMALLOC_DEBUG
     printf("%s:%d: xmalloc(%zu) = %p\n", file, line, size, ptr);
@@ -18,8 +18,8 @@ void *xmalloc_internal(size_t size, const char *file, int line) {
 void *xcalloc_internal(size_t nmemb, size_t size, const char *file, int line) {
     void *ptr = calloc(nmemb, size);
     if (ptr == NULL) {
-        fprintf(stderr, "xmalloc: Out of memory at %s:%d\n", file, line);
-        exit(1);
+        fprintf(stderr, "%s:%d: xcalloc(%zu, %zu) returned NULL\n", file, line, nmemb, size);
+        abort();
     }
     #ifdef ENCLOGS_XMALLOC_DEBUG
     printf("%s:%d: xcalloc(%zu, %zu) = %p\n", file, line, nmemb, size, ptr);
@@ -30,8 +30,8 @@ void *xcalloc_internal(size_t nmemb, size_t size, const char *file, int line) {
 void *xrealloc_internal(void *ptr, size_t size, const char *file, int line) {
     void *new_ptr = realloc(ptr, size);
     if (new_ptr == NULL && size != 0) {
-        fprintf(stderr, "xmalloc: Out of memory at %s:%d\n", file, line);
-        exit(1);
+        fprintf(stderr, "%s:%d: xrealloc(%p, %zu) returned NULL\n", file, line, ptr, size);
+        abort();
     }
     #ifdef ENCLOGS_XMALLOC_DEBUG
     printf("%s:%d: xrealloc(%p, %zu) = %p\n", file, line, ptr, size, new_ptr);
@@ -42,8 +42,8 @@ void *xrealloc_internal(void *ptr, size_t size, const char *file, int line) {
 void *xreallocarray_internal(void *ptr, size_t nmemb, size_t size, const char *file, int line) {
     void *new_ptr = reallocarray(ptr, nmemb, size);
     if (new_ptr == NULL && nmemb != 0 && size != 0) {
-        fprintf(stderr, "xmalloc: Out of memory at %s:%d\n", file, line);
-        exit(1);
+        fprintf(stderr, "%s:%d: xreallocarray(%p, %zu, %zu) returned NULL\n", file, line, ptr, nmemb, size);
+        abort();
     }
     #ifdef ENCLOGS_XMALLOC_DEBUG
     printf("%s:%d: xreallocarray(%p, %zu, %zu) = %p\n", file, line, ptr, nmemb, size, new_ptr);
