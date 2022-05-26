@@ -151,6 +151,8 @@ int main() {
 				fwrite(&enclog_len, sizeof(enclog_len), 1, f);
 				fwrite(enclog, 1, enclog_len, f);
 			}
+		} else {
+			printf("Unknown command \"%s\".\n", input);
 		}
 	}
 }
