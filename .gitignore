@@ -3,3 +3,4 @@ enclogs
 obj/*
 *.swp
 *.temp.*
+logs.bin
