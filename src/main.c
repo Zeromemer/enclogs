@@ -11,11 +11,6 @@ unsigned char sign[] = { 0xf3, 0x3f, 0x65, 0x6e, 0x63, 0x6c, 0x6f, 0x67, 0x73, 0
 #define SIGN_LENGTH sizeof(sign)
 
 
-/* TODO: make the logs infinitly expandable by not saving them in memory!
-   indexing them will stay the same, probably
- */
-
-
 void hex_print(void *in, size_t len) {
 	unsigned char *data = in;
 	for (size_t i = 0; i < len; i++) {
@@ -158,6 +153,46 @@ int main() {
 			// write the length
 			fwrite(&logs_amount, sizeof(logs_amount), 1, f);
 
+			for (int i = 0; i < logs_amount; i++) {
+				// serialize log
+				char *binlog;
+				size_t binlog_len;
+				serialize_log(logs[i], &binlog, &binlog_len);
+
+				// encrypt log
+				unsigned char *enclog = xcalloc(MAX_ENC_LENGTH(binlog_len), 1);
+				ssize_t enclog_len = aes256_encrypt(key_st, binlog, binlog_len, enclog);
+
+				// write log and length to logs file
+				fwrite(&enclog_len, sizeof(enclog_len), 1, f);
+				fwrite(enclog, 1, enclog_len, f);
+			}
+		} else if (strcmp("remove", input) == 0) {
+			input = rl_gets("Enter index: ");
+			int index = atoi(input);
+			// index should go backwards (a.k.a index 0 is the last log)
+			int actual_index = logs_amount - index - 1;
+
+			if (actual_index < 0 || actual_index >= logs_amount) {
+				fprintf(stderr, "Error: index out of bounds\n");
+			}
+
+			// remove log
+			log_free(logs[actual_index]);
+			logs_amount--;
+
+			// remove log from logs
+			for (int i = actual_index; i < logs_amount; i++) {
+				logs[i] = logs[i + 1];
+			}
+
+			// save log file (will be optimized)
+			fseek(f, 0, SEEK_SET);
+			// write the sign
+			fwrite(sign, SIGN_LENGTH, sizeof(unsigned char), f);
+			// write the length
+			fwrite(&logs_amount, sizeof(logs_amount), 1, f);
+			
 			for (int i = 0; i < logs_amount; i++) {
 				// serialize log
 				char *binlog;
