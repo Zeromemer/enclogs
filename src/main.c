@@ -10,6 +10,12 @@
 unsigned char sign[] = { 0xf3, 0x3f, 0x65, 0x6e, 0x63, 0x6c, 0x6f, 0x67, 0x73, 0x0d, 0x0a, 0x00 };
 #define SIGN_LENGTH sizeof(sign)
 
+
+/* TODO: make the logs infinitly expandable by not saving them in memory!
+   indexing them will stay the same, probably
+ */
+
+
 void hex_print(void *in, size_t len) {
 	unsigned char *data = in;
 	for (size_t i = 0; i < len; i++) {
@@ -65,7 +71,7 @@ int main() {
 		xfree(input);
 		xfree(confirm);
 	}
-	
+
 	if (!enclogs_file_exists) {
 		FILE *f = fopen(ENCLOGS_PATH, "w+");
 		// write the sign
