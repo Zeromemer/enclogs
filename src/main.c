@@ -134,7 +134,7 @@ int main() {
 		} else if (strcmp("list", input) == 0) {
 			for (int i = 0; i < logs_amount; i++) {
 				timespec2str(time_buf, sizeof(time_buf), &logs[i]->time);
-				printf("[%s]: %s\n", time_buf, logs[i]->content);
+				printf("[%ld] [%s]: %s\n", logs_amount - i - 1, time_buf, logs[i]->content);
 			}
 		} else if (strcmp("add", input) == 0) {
 			input = rl_gets("Enter message: ");
@@ -192,7 +192,7 @@ int main() {
 			fwrite(sign, SIGN_LENGTH, sizeof(unsigned char), f);
 			// write the length
 			fwrite(&logs_amount, sizeof(logs_amount), 1, f);
-			
+
 			for (int i = 0; i < logs_amount; i++) {
 				// serialize log
 				char *binlog;
