@@ -271,9 +271,9 @@ int main() {
 
 			xfree(input);
 			xfree(confirm);
-		} else if (strcmp("clear", input) == 0) {
+		} else if (strcmp("wipe", input) == 0) {
 			// ask for confirmation
-			input = rl_gets("Are you sure? (y/n): ");
+			input = rl_gets("Are you sure you want to delete all logs? (y/n): ");
 			if (strcmp("y", input) == 0) {
 				printf("aight, clearin' logs...\n");
 
