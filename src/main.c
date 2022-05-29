@@ -129,7 +129,7 @@ int main() {
 			printf("\tadd - add a new log\n");
 			printf("\tremove - remove a log at a given index\n");
 			printf("\tpasswd - change the password\n");
-			printf("\wipe - remove all logs\n");
+			printf("\twipe - remove all logs\n");
 		} else if (strcmp("list", input) == 0) {
 			int padding_size = log10(logs_amount - 1) + 1;
 
