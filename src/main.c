@@ -121,6 +121,9 @@ int main() {
 
 		// put in logs
 		logs[i] = log;
+
+		xfree(enclog);
+		xfree(log_bin);
 	}
 
 	// CLI loop
@@ -170,6 +173,9 @@ int main() {
 				// write log and length to logs file
 				fwrite(&enclog_len, sizeof(enclog_len), 1, f);
 				fwrite(enclog, 1, enclog_len, f);
+
+				xfree(binlog);
+				xfree(enclog);
 			}
 		} else if (strcmp("remove", input) == 0) {
 			input = rl_gets("Enter index: ");
@@ -210,9 +216,20 @@ int main() {
 				// write log and length to logs file
 				fwrite(&enclog_len, sizeof(enclog_len), 1, f);
 				fwrite(enclog, 1, enclog_len, f);
+
+				xfree(binlog);
+				xfree(enclog);
 			}
 		} else {
 			printf("Unknown command \"%s\". Try \"help\".\n", input);
 		}
 	}
+
+	xfree(key_st);
+	for (int i = 0; i < logs_amount; i++) {
+		log_free(logs[i]);
+	}
+	xfree(logs);
+
+	return 0;
 }
