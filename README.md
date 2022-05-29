@@ -11,7 +11,7 @@ The signiture is used to check if the file is a valid enclog file.
 The next 4 bytes are the amount of logs in the file.  
 each log is stored as follows:
 - 4 bytes for the length of the log
-- the encrypted log data (content length content and the timestamp)
+- the encrypted log data (content length, content and the timestamp)
 
 for example:
 if the log's content is "Hello World" and the timestamp is "2019-01-01 00:00:00" the serialized log would look like this:
