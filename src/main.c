@@ -12,17 +12,6 @@ unsigned char sign[] = { 0xf3, 0x3f, 0x65, 0x6e, 0x63, 0x6c, 0x6f, 0x67, 0x73, 0
 #define SIGN_LENGTH sizeof(sign)
 
 
-void hex_print(void *in, size_t len) {
-	unsigned char *data = in;
-	for (size_t i = 0; i < len; i++) {
-		if (i % 16 == 0) {
-			printf("\n");
-		}
-		printf("%02x ", data[i]);
-	}
-	printf("\n");
-}
-
 int timespec2str(char *buf, uint len, struct timespec *ts) {
 	int ret;
 	struct tm t;
