@@ -3,7 +3,7 @@ CC=gcc
 sources=$(wildcard src/*.c)
 objects=$(patsubst src/%.c, obj/%.o, $(sources))
 cflags=-g -Wall
-lflags=-lpthread -lssl -lcrypto -lreadline
+lflags=-lpthread -lm -lssl -lcrypto -lreadline
 
 all: $(exec)
 

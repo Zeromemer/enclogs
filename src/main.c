@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include <openssl/err.h>
 #include "include/aes.h"
 #include "include/input.h"
@@ -140,9 +141,11 @@ int main() {
 			printf("\tremove - remove a log at a given index\n");
 			printf("\tpasswd - change the password\n");
 		} else if (strcmp("list", input) == 0) {
+			int padding_size = log10(logs_amount - 1) + 1;
+
 			for (int i = 0; i < logs_amount; i++) {
 				timespec2str(time_buf, sizeof(time_buf), &logs[i]->time);
-				printf("[%ld] [%s]: %s\n", logs_amount - i - 1, time_buf, logs[i]->content);
+				printf("[%0*ld] [%s]: %s\n", padding_size, logs_amount - i - 1, time_buf, logs[i]->content);
 			}
 		} else if (strcmp("add", input) == 0) {
 			input = rl_gets("Enter message: ");
@@ -259,6 +262,27 @@ int main() {
 
 			xfree(input);
 			xfree(confirm);
+		} else if (strcmp("clear", input) == 0) {
+			// ask for confirmation
+			input = rl_gets("Are you sure? (y/n): ");
+			if (strcmp("y", input) == 0) {
+				printf("aight, clearin' logs...\n");
+
+				// clear logs
+				for (int i = 0; i < logs_amount; i++) {
+					log_free(logs[i]);
+				}
+				xfree(logs);
+				logs = NULL;
+				logs_amount = 0;
+
+				// save log file (will be optimized)
+				fseek(f, 0, SEEK_SET);
+				// write the sign
+				fwrite(sign, SIGN_LENGTH, sizeof(unsigned char), f);
+				// write the length
+				fwrite(&logs_amount, sizeof(logs_amount), 1, f);
+			}
 		} else {
 			printf("Unknown command \"%s\". Try \"help\".\n", input);
 		}
