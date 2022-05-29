@@ -138,6 +138,7 @@ int main() {
 			printf("\tlist - list all logs\n");
 			printf("\tadd - add a new log\n");
 			printf("\tremove - remove a log at a given index\n");
+			printf("\tpasswd - change the password\n");
 		} else if (strcmp("list", input) == 0) {
 			for (int i = 0; i < logs_amount; i++) {
 				timespec2str(time_buf, sizeof(time_buf), &logs[i]->time);
@@ -220,6 +221,44 @@ int main() {
 				xfree(binlog);
 				xfree(enclog);
 			}
+		} else if (strcmp("passwd", input) == 0) {
+			input = rl_getps("Enter new password: ");
+			char *confirm = rl_getps("Confirm new password: ");
+			if (strcmp(input, confirm) != 0) {
+				fprintf(stderr, "Error: passwords don't match\n");
+			}
+
+			// generate new key
+			aes_key_free(key_st);
+			key_st = aes_key_init(input);
+
+			// save file
+			fseek(f, 0, SEEK_SET);
+			// write the sign
+			fwrite(sign, SIGN_LENGTH, sizeof(unsigned char), f);
+			// write the length
+			fwrite(&logs_amount, sizeof(logs_amount), 1, f);
+
+			for (int i = 0; i < logs_amount; i++) {
+				// serialize log
+				char *binlog;
+				size_t binlog_len;
+				serialize_log(logs[i], &binlog, &binlog_len);
+
+				// encrypt log
+				unsigned char *enclog = xcalloc(MAX_ENC_LENGTH(binlog_len), 1);
+				ssize_t enclog_len = aes256_encrypt(key_st, binlog, binlog_len, enclog);
+
+				// write log and length to logs file
+				fwrite(&enclog_len, sizeof(enclog_len), 1, f);
+				fwrite(enclog, 1, enclog_len, f);
+
+				xfree(binlog);
+				xfree(enclog);
+			}
+
+			xfree(input);
+			xfree(confirm);
 		} else {
 			printf("Unknown command \"%s\". Try \"help\".\n", input);
 		}
