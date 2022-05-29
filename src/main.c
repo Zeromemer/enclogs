@@ -283,6 +283,9 @@ int main() {
 				fwrite(&logs_amount, sizeof(logs_amount), 1, f);
 			}
 		} else {
+			if (input[0] == '\0') {
+				continue;
+			}
 			printf("Unknown command \"%s\". Try \"help\".\n", input);
 		}
 	}
