@@ -189,7 +189,16 @@ int main() {
 
 			if (actual_index < 0 || actual_index >= logs_amount) {
 				fprintf(stderr, "Error: index out of bounds\n");
+				continue;
 			}
+
+			// ask for confirmation
+			printf("Are you sure you want to remove log containing: %s?\n", logs[actual_index]->content);
+			input = rl_gets("[y/n] ");
+			if (strcmp("y", input) != 0) {
+				continue;
+			}
+
 
 			// remove log
 			log_free(logs[actual_index]);
