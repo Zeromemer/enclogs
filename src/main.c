@@ -65,10 +65,8 @@ int main() {
 		key_st = aes_key_init(input);
 		xfree(input);
 		xfree(confirm);
-	}
 
-	if (!enclogs_file_exists) {
-		FILE *f = fopen(ENCLOGS_PATH, "w+");
+		FILE *f = fopen(ENCLOGS_PATH, "w");
 		// write the sign
 		fwrite(sign, SIGN_LENGTH, sizeof(unsigned char), f);
 		// write the length (0)
@@ -131,6 +129,12 @@ int main() {
 		if (strcmp("exit", input) == 0) {
 			printf("Exiting...\n");
 			break;
+		} else if (strcmp("help", input) == 0) {
+			printf("Available commands:\n");
+			printf("\thelp - show this help\n");
+			printf("\tlist - list all logs\n");
+			printf("\tadd - add a new log\n");
+			printf("\tremove - remove a log at a given index\n");
 		} else if (strcmp("list", input) == 0) {
 			for (int i = 0; i < logs_amount; i++) {
 				timespec2str(time_buf, sizeof(time_buf), &logs[i]->time);
@@ -208,7 +212,7 @@ int main() {
 				fwrite(enclog, 1, enclog_len, f);
 			}
 		} else {
-			printf("Unknown command \"%s\".\n", input);
+			printf("Unknown command \"%s\". Try \"help\".\n", input);
 		}
 	}
 }
