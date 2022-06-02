@@ -1,6 +1,17 @@
 # Enc Logs
 This is a program for encrypting logs with a password made in C.
 Works like a diary.
+## Usage
+For setting up, refer to [this](#setup) section.  
+At first execution, the program will ask you for a password and to confirm it. (on the next runs, the program will ask you to enter the password again)  
+After that, you enter the Command Line Interface (CLI) and you can use the following commands:
+- 'help' to see the list of commands and their usage
+- 'list' to list all the logs
+- 'add' to add a new log
+- 'remove' to remove a log
+- 'passwd' to change the password
+- 'wipe' to wipe all the logs
+- 'exit' to exit the program
 ## Encryption Algorithm
 The encryption algorithm is as specified in the description AES-256-CBC.
 The key and iv are generated from the password's SHA256 hash.
@@ -13,20 +24,20 @@ each log is stored as follows:
 - 4 bytes for the length of the log
 - the encrypted log data (content length, content and the timestamp)
 
-for example:
-if the log's content is "Hello World" and the timestamp is "2019-01-01 00:00:00" the serialized log would look like this:
+For example:
+If we have a log with the content "Hello World" and timestamp is "2019-01-01 00:00:00" the serialized log would look like this:
 ```
-[length of "Hello World" in 4 bytes]["Hello World"][timeval struct for "2019-01-01 00:00:00"]
+[length of "Hello World" in 4 bytes]["Hello World" without '\0'][timeval struct for "2019-01-01 00:00:00"]
 ```
 
-and in the actual file it would look like this:
+And after being encrypted, it will be stored like this:
 ```
 [length of encrypted log][encrypted log]
 ```
 
-so the entire enclog file would look like this:
+So the entire enclog file would look like this:
 ```
-[signiture][1 in 4 bytes][length of encrypted log][encrypted log]
+[signiture][n in 4 bytes][length of encrypted log 1][encrypted log content 1][length of encrypted log 2][encrypted log content 2]... (repeated n times)
 ```
 
 ## Setup
