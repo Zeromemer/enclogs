@@ -25,7 +25,7 @@ int timespec2str(char *buf, uint len, struct timespec *ts) {
 		return 2;
 	len -= ret - 1;
 
-	ret = snprintf(&buf[strlen(buf)], len, ".%09ld", ts->tv_nsec);
+	ret = snprintf(buf + strlen(buf), len, ".%09ld", ts->tv_nsec);
 	if (ret >= len)
 		return 3;
 
